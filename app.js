@@ -9,7 +9,7 @@ const DefaultData=require("./defaultdata");
 const cors= require("cors");
 app.use(express.json());
 app.use(cookieParser());
-// app.use(cors());
+app.use(cors());
 
 // // Use cors middleware with options
 // const corsOptions = {
@@ -20,10 +20,10 @@ app.use(cookieParser());
 //   app.use(cors(corsOptions)); // Apply CORS middleware with options
 
 
-app.use(cors({
-    origin: 'https://6498441b7290f10e11e795a2--scintillating-muffin-9630b5.netlify.app',
-    credentials: true, // Allow credentials (cookies, authorization headers)
-  }));
+// app.use(cors({
+//     origin: 'https://6498441b7290f10e11e795a2--scintillating-muffin-9630b5.netlify.app',
+//     credentials: true, // Allow credentials (cookies, authorization headers)
+//   }));
 
 
 const router=require("./routes/router");
