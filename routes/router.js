@@ -2,6 +2,7 @@ const express= require('express');
 const router=new express.Router();
 const Products=require("../models/productsSchema");
 const USER= require("../models/userSchema");
+const CONTACT= require("../models/contact");
 const bcrypt=require("bcryptjs");
 const authenicate = require('../middleware/authenticate');
 
@@ -63,6 +64,34 @@ router.post("/register", async (req, res) => {
             // console.log(storedata + "user successfully added");
             res.status(201).json(storedata);
         }
+
+    } catch (error) {
+        console.log("Error " + error.message);
+        res.status(422).send(error);
+    }
+})
+
+//  contact us
+router.post("/contact", async (req, res) => {
+    // console.log(req.body);
+    const { fname, email, mobile, message } = req.body;
+
+    if (!fname || !email || !mobile || !message) {
+        res.status(422).json({ error: "Fill the all details" });
+        console.log("Data not available");
+    };
+
+    try {
+
+        
+            const finalcontact = new CONTACT({
+                fname, email, mobile, message
+            });
+
+
+            const storedata = await finalcontact.save();
+            // console.log(storedata + "user successfully added");
+            res.status(201).json(storedata);
 
     } catch (error) {
         console.log("Error " + error.message);
@@ -181,46 +210,51 @@ router.get("/cartdetails", authenicate, async (req, res) => {
 });
 
 // get user is login or not
-router.get("/validuser", authenicate, async (req, res) => {
+// router.get("/validuser", authenicate, async (req, res) => {
+//     try {
+//         const validuserone = await USER.findOne({ _id: req.userID });
+//         console.log(validuserone);
+//         res.status(201).json(validuserone);
+//     } catch (error) {
+//         console.log(error + "error for valid user");
+//     }
+// });
+
+// router.delete("/remove/:id", authenicate, async (req, res) => {
+//     try {
+//         const { id } = req.params;
+
+//         req.rootUser.carts = req.rootUser.carts.filter((curel) => {
+//             return curel.id != id
+//         });
+
+//         req.rootUser.save();
+//         res.status(201).json(req.rootUser);
+//         console.log("iteam remove");
+
+//     } catch (error) {
+//         console.log("error" + error);
+//         res.status(400).json(req.rootUser);
+//     }
+// });
+
+// router.get("/logout", authenicate, async (req, res) => {
+router.get("/logout", async (req, res) => {
     try {
-        const validuserone = await USER.findOne({ _id: req.userID });
-        console.log(validuserone);
-        res.status(201).json(validuserone);
-    } catch (error) {
-        console.log(error + "error for valid user");
-    }
-});
+        // req.rootUser.tokens = req.rootUser.tokens.filter((curelem)=>{
+        //     return curelem.token!==req.token
+        // })
 
-router.delete("/remove/:id", authenicate, async (req, res) => {
-    try {
-        const { id } = req.params;
-
-        req.rootUser.carts = req.rootUser.carts.filter((curel) => {
-            return curel.id != id
-        });
-
-        req.rootUser.save();
-        res.status(201).json(req.rootUser);
-        console.log("iteam remove");
-
-    } catch (error) {
-        console.log("error" + error);
-        res.status(400).json(req.rootUser);
-    }
-});
-
-router.get("/logout", authenicate, async (req, res) => {
-    try {
-        req.rootUser.tokens = req.rootUser.tokens.filter((curelem)=>{
-            return curelem.token!==req.token
-        })
+        // req.rootUser.tokens=[];
 
         res.clearCookie("Ecommerce", {path:"/"})
-        req.rootUser.save();
-        res.status(201).json(req.rootUser.tokens);
+        // req.rootUser.save();
+        // res.status(201).json(req.rootUser.tokens);
+        res.status(201).json("User log out");
         console.log("User logout")
 
     } catch (error) {
+        console.log(error);
         console.log("Error for user logout")
     }
 });
